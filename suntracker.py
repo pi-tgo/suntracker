@@ -11,11 +11,14 @@ data = pd.read_csv(filename)
 #origindata = pd.read_csv(filename, skiprows=1)
 #data = origindata.drop(origindata.index[[0,1]])
 
+current_date = data['TIMESTAMP'][1][0:10]
+data.TIMESTAMP = pd.to_datetime(data.TIMESTAMP)
+
 data = data.set_index('TIMESTAMP')
 
 ax = plt.gca()
 
-ax.set_title('Solar Radiation')
+ax.set_title('Solar Radiation ' + current_date)
 ax.set_ylabel('Irradiance (W/m2)')
 ax.grid(True, which='both')
 
