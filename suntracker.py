@@ -1,15 +1,25 @@
 #!/usr/bin/python
 
-import sys
+import sys, re, os, random
 import pandas as pd
 import matplotlib.pyplot as plt
 # matplotlib.use('Agg')       # use the 'Agg' backend when $DISPLAY environment is not defined
 plt.rcParams["figure.figsize"] = (12, 8)
 
-filename = sys.argv[1]
+filename = ''.join(random.choice('01234567890abcdef') for i in range(16)) + '.csv'
+
+infile = open(sys.argv[1], 'r')
+outfile = open(filename, 'a')
+
+for line in infile:
+    line = re.sub(line[:line.find("\"")], '', line)
+    outfile.write(line)
+
+infile.close()
+outfile.close()
+
 data = pd.read_csv(filename)
-#origindata = pd.read_csv(filename, skiprows=1)
-#data = origindata.drop(origindata.index[[0,1]])
+os.remove(filename)
 
 current_date = data['TIMESTAMP'][1][0:10]
 data.TIMESTAMP = pd.to_datetime(data.TIMESTAMP)
@@ -35,3 +45,4 @@ for tick in ax.get_xticklabels():
 #plt.savefig(savefilename)
 
 plt.show()
+
