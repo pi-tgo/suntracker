@@ -1,13 +1,26 @@
-#!/usr/bin/python
-#
-# crontab: 4 0 * * * python housekeeping.py
-# for å utføres kl. 0:04 hver natt
+#!/usr/bin/env python
 
-import datetime
+import datetime, re
 import shutil
 
-filename = str(datetime.date.today() + datetime.timedelta(days=-1)) + '.csv'
+# Make the filename to be the date - modify 
+ARCHIVE_PATH = 'C:\\Temp\\archive\\'  # windows like path
+ARCHIVE_PATH = '/home/sun/archive/' # unix like path
 
-shutil.move('latest.csv', filename)
+yesterday = datetime.datetime.today() - datetime.timedelta(days = 1)
+filename = ARCHIVE_PATH + yesterday.strftime('%y-%m-%d.csv')
+
+# Rutine to remove unwanted data in the file to be archived:
+infile = open('latest.csv', 'r')
+outfile = open(filename, 'a')
+
+for line in infile:
+    line = re.sub(line[:line.find("\"")], '', line)
+    outfile.write(line)
+
+infile.close()
+outfile.close()
+
+# Create a new latest.csv file
 shutil.copy('header.csv', 'latest.csv')
 
