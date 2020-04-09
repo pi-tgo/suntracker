@@ -28,8 +28,8 @@ if len(data) != 0:
     current_date = data['TIMESTAMP'][0][0:10]
 
 data.TIMESTAMP = pd.to_datetime(data.TIMESTAMP)
-
-data = data.set_index('TIMESTAMP')
+data = data.rename(columns={'TIMESTAMP': 'TIMESTAMP (UTC)'})
+data = data.set_index('TIMESTAMP (UTC)')
 
 ax = plt.gca()
 
@@ -37,7 +37,7 @@ ax.set_title('Solar Radiation ' + current_date)
 ax.set_ylabel('Irradiance (W/m2)')
 ax.grid(True, which='both')
 
-data['Global_Horizontal_Irradiance_Avg'].astype(float).plot(kind='line',linewidth=0.5, label='Global Horizontal Avg',
+data['Global_Horizontal_Irradiance_Avg'].astype(float).plot(kind='line', linewidth=0.5, label='Global Horizontal Avg',
                                                             ax=ax)
 # data['Global_Horizontal_Irradiance_Max'].astype(float).plot(kind='line',linewidth=0.5, label='Global Horizontal Max', ax=ax)
 # data['Global_Horizontal_Irradiance_Min'].astype(float).plot(kind='line',linewidth=0.5, label='Global Horizontal Min', ax=ax)
